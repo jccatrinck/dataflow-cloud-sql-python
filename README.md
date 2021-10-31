@@ -7,6 +7,7 @@ Connecting to Cloud SQL from Dataflow in Python
 - [Explanation](#explanation)
 - [Quick-start](#quick-start)
 - [Structure](#structure)
+- [Example](#example)
 ---
 ### Explanation
 
@@ -45,5 +46,12 @@ To see all commands available:
 ```
 
 The `entrypoint.sh` script was build following these instructions [Run multiple services in a container](https://docs.docker.com/config/containers/multi-service_container/) using [Modifying the container entrypoint](https://cloud.google.com/dataflow/docs/guides/using-custom-containers#custom-entrypoint) as boilerplate
+
+---
+### Example
+
+This pipeline in Dataflow:
+
+![image](https://user-images.githubusercontent.com/7607939/139589543-2e3ad63c-be88-46bd-ae2f-d4c4f2360cb8.png)
 
 ---
