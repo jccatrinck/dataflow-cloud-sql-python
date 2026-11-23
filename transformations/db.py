@@ -1,19 +1,17 @@
 from __future__ import division, print_function
 
 import apache_beam as beam
-
-import apache_beam as beam
-
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 
+
 class ReadFromDBFn(beam.DoFn):
-    
-    def __init__(self, url, query, query_params={}, *args, **kwargs):
+
+    def __init__(self, url, query, query_params=None, *args, **kwargs):
         super(ReadFromDBFn, self).__init__(*args, **kwargs)
         self.url = url
         self.query = query
-        self.query_params = query_params
+        self.query_params = query_params if query_params is not None else {}
 
     def process(self, data):
         data = dict(data)
@@ -27,6 +25,7 @@ class ReadFromDBFn(beam.DoFn):
 
         for record in engine.execute(sqlalchemy.sql.text(self.query), query_params):
             yield dict(record)
+
 
 class WriteIntoDB(beam.PTransform):
 
@@ -43,14 +42,15 @@ class WriteIntoDB(beam.PTransform):
             update_ignores=self.update_ignores,
         ))
 
+
 class WriteIntoDBFn(beam.DoFn):
     def __init__(self, url, table, update_ignores, *args, **kwargs):
         super(WriteIntoDBFn, self).__init__(*args, **kwargs)
         self.url = url
         self.table = table
         self.update_ignores = update_ignores
-       
-    @staticmethod               
+
+    @staticmethod
     def column_reflect_listener(inspector, table, column_info):
         if isinstance(column_info['type'], sqlalchemy.dialects.postgresql.base.UUID):
             column_info['type'].as_uuid = True
